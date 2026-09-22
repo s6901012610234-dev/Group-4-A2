@@ -65,7 +65,27 @@ def visual():
         y = y + 1
 
 
-#def three_del():
+def three_del():
+    y = 0
+    while y < grid_size[1]:
+        x = 0
+        while x < grid_size[0]:
+            colour_index = grid[y][x]
+
+            if colour_index != 0:
+                if x + 2 < grid_size[0]:
+                    if colour_index == grid[y][x+1] and colour_index == grid[y][x+2]:
+                        grid[y][x] = 0
+                        grid[y][x+1] = 0
+                        grid[y][x+2] = 0
+
+                if y + 2 < grid_size[1]:
+                    if colour_index == grid[y+1][x] and colour_index == grid[y+2][x]:
+                        grid[y][x] = 0
+                        grid[y+1][x] = 0
+                        grid[y+2][x] = 0
+            x = x + 1
+        y = y + 1
 
 
 #def fall():
@@ -108,6 +128,7 @@ def draw():
     background(255)
     fillin()
     visual()
+    three_del()
 
 
 run()

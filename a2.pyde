@@ -4,10 +4,9 @@ import random
 grid_size = [10,10]
 screen_size = [500,500]
 grid = []
-colour = [[255,100,100],[100,255,100],[100,100,255]]
+letters = ["R","G","B","Y"]
 selection = [False, 0, 0]
 
-#---------------------------------setup---------------------------------------
 
 def setup():
     size(screen_size[0],screen_size[1])
@@ -17,20 +16,31 @@ def setup():
         row = []
         y = 0
         while y < grid_size[0]:
-            row.append(0)
+            row.append(".")
             y = y + 1
         grid.append(row)
         x = x + 1
 
-#---------------------------------main----------------------------------------
+
+def get_colour(letter):
+    if letter == "R":
+        return [255,100,100]
+    if letter == "G":
+        return [100,255,100]
+    if letter == "B":
+        return [100,100,255]
+    if letter == "Y":
+        return [255,255,100]
+    return [255,255,255]
+
 
 def fillin():
     a = 0
     while a < grid_size[1]:
         b = 0
         while b < grid_size[0]:
-            if grid[a][b] == 0:
-                grid[a][b] = random.randint(1,3)
+            if grid[a][b] == ".":
+                grid[a][b] = letters[random.randint(0,3)]
             b = b + 1
         a = a + 1
 
@@ -57,8 +67,7 @@ def visual():
         while x < grid_size[0]:
             cellx = (x * cell_width) + (cell_width / 2)
             celly = (y * cell_height) + (cell_height / 2)
-            colour_index = grid[y][x]
-            fill_colour = colour[colour_index - 1]
+            fill_colour = get_colour(grid[y][x])
             fill(fill_colour[0], fill_colour[1], fill_colour[2])
             ellipse(cellx, celly, cell_width * 0.6, cell_height * 0.6)
             x = x + 1
@@ -70,25 +79,45 @@ def three_del():
     while y < grid_size[1]:
         x = 0
         while x < grid_size[0]:
-            colour_index = grid[y][x]
+            candy = grid[y][x]
 
-            if colour_index != 0:
+            if candy != ".":
                 if x + 2 < grid_size[0]:
-                    if colour_index == grid[y][x+1] and colour_index == grid[y][x+2]:
-                        grid[y][x] = 0
-                        grid[y][x+1] = 0
-                        grid[y][x+2] = 0
+                    if candy == grid[y][x+1] and candy == grid[y][x+2]:
+                            grid[y][x] = "."
+                            grid[y][x+1] = "."
+                            grid[y][x+2] = "."
 
                 if y + 2 < grid_size[1]:
-                    if colour_index == grid[y+1][x] and colour_index == grid[y+2][x]:
-                        grid[y][x] = 0
-                        grid[y+1][x] = 0
-                        grid[y+2][x] = 0
+                    if candy == grid[y+1][x] and candy == grid[y+2][x]:
+                            grid[y][x] = "."
+                            grid[y+1][x] = "."
+                            grid[y+2][x] = "."
+
             x = x + 1
         y = y + 1
 
 
-#def fall():
+def fall():
+    x = 0
+    while x < grid_size[0]:
+        stack = []
+        y = grid_size[1] - 1
+        while y >= 0:
+            if grid[y][x] != ".":
+                stack.append(grid[y][x])
+            y = y - 1
+
+        y = grid_size[1] - 1
+        idx = 0
+        while y >= 0:
+            if idx < len(stack):
+                grid[y][x] = stack[idx]
+            else:
+                grid[y][x] = "."
+            idx = idx + 1
+            y = y - 1
+        x = x + 1
 
 
 def mousePressed():
@@ -122,13 +151,14 @@ def mousePressed():
 
     selection[0] = False
 
-#----------------------------------draw---------------------------------------
 
 def draw():
     background(255)
     fillin()
-    visual()
     three_del()
+    fall()
+    fillin()
+    visual()
 
 
 run()

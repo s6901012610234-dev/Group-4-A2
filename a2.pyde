@@ -70,6 +70,16 @@ def visual():
             fill_colour = get_colour(grid[y][x])
             fill(fill_colour[0], fill_colour[1], fill_colour[2])
             ellipse(cellx, celly, cell_width * 0.75, cell_height * 0.75)
+
+            if selection[0] == True:
+                if x == selection[1]:
+                    if y == selection[2]:
+                        noFill()
+                        stroke(0,0,0)
+                        strokeWeight(3)
+                        ellipse(cellx, celly, cell_width * 0.9, cell_height * 0.9)
+                        strokeWeight(1)
+                        
             x = x + 1
         y = y + 1
 

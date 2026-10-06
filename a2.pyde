@@ -79,7 +79,7 @@ def visual():
                         strokeWeight(3)
                         ellipse(cellx, celly, cell_width * 0.9, cell_height * 0.9)
                         strokeWeight(1)
-                        
+
             x = x + 1
         y = y + 1
 
@@ -130,6 +130,27 @@ def fall():
         x = x + 1
 
 
+def has_match():
+    y = 0
+    while y < grid_size[1]:
+        x = 0
+        while x < grid_size[0]:
+            candy = grid[y][x]
+
+            if candy != ".":
+                if x + 2 < grid_size[0]:
+                    if candy == grid[y][x+1] and candy == grid[y][x+2]:
+                        return True
+
+                if y + 2 < grid_size[1]:
+                    if candy == grid[y+1][x] and candy == grid[y+2][x]:
+                        return True
+
+            x = x + 1
+        y = y + 1
+    return False
+
+
 def mousePressed():
     cell_width = screen_size[0] / grid_size[0]
     cell_height = screen_size[1] / grid_size[1]
@@ -158,6 +179,12 @@ def mousePressed():
         temp = grid[y0][x0]
         grid[y0][x0] = grid[click_y][click_x]
         grid[click_y][click_x] = temp
+
+        matched = has_match()
+        if matched == False:
+            temp = grid[y0][x0]
+            grid[y0][x0] = grid[click_y][click_x]
+            grid[click_y][click_x] = temp
 
     selection[0] = False
 

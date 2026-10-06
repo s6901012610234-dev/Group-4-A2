@@ -10,7 +10,7 @@ selection = [False, 0, 0]
 
 def setup():
     size(screen_size[0],screen_size[1])
-    strokeWeight(3)
+    strokeWeight(1)
     x = 0
     while x < grid_size[1]:
         row = []
@@ -69,7 +69,7 @@ def visual():
             celly = (y * cell_height) + (cell_height / 2)
             fill_colour = get_colour(grid[y][x])
             fill(fill_colour[0], fill_colour[1], fill_colour[2])
-            ellipse(cellx, celly, cell_width * 0.6, cell_height * 0.6)
+            ellipse(cellx, celly, cell_width * 0.75, cell_height * 0.75)
             x = x + 1
         y = y + 1
 
@@ -150,6 +150,58 @@ def mousePressed():
         grid[click_y][click_x] = temp
 
     selection[0] = False
+
+
+def keyPressed():
+    if key == 's':
+        save_game()
+    if key == 'l':
+        load_game()
+
+
+def save_game():
+    text = ""
+    y = 0
+    while y < grid_size[1]:
+        row_text = ""
+        x = 0
+        while x < grid_size[0]:
+            row_text = row_text + grid[y][x]
+            x = x + 1
+        text = text + row_text
+        if y < grid_size[1] - 1:
+            text = text + "\n"
+        y = y + 1
+
+    with open("save.txt", "w") as f:
+        f.write(text)
+
+
+def load_game():
+    with open("save.txt", "r") as f:
+        content = f.read()
+
+    lines = []
+    current_line = ""
+    i = 0
+    while i < len(content):
+        ch = content[i]
+        if ch == "\n":
+            lines.append(current_line)
+            current_line = ""
+        else:
+            current_line = current_line + ch
+        i = i + 1
+    lines.append(current_line)
+
+    y = 0
+    while y < grid_size[1]:
+        line_text = lines[y]
+        x = 0
+        while x < grid_size[0]:
+            grid[y][x] = line_text[x]
+            x = x + 1
+        y = y + 1
 
 
 def draw():
